@@ -1,0 +1,30 @@
+provider "azurerm" {
+  features {}
+}
+
+resource "azurerm_resource_group" "example" {
+  name     = "example-resource-group"
+  location = "eastus"
+}
+
+resource "azurerm_container_group" "example" {
+  name                = "example-container-group"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+  ip_address_type     = "public"
+  dns_name_label      = "example-dns-label"
+
+  container {
+    name   = "example-container" 
+    image  = "your-container-registry/image-name:tag"
+    cpu    = "1.0"
+    memory = "1.5"
+    
+    ports {
+      port     = 8080
+      protocol = "TCP"
+    }  
+  }
+
+  os_type = "linux" 
+}
